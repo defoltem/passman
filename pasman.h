@@ -10,9 +10,12 @@ class pasman {
     std::vector<std::string> descriptions;
     std::fstream file;
 public:
-    void init_file();
-    void read_file();
-    void add_new_record();
-    std::string get_description(int ord);
-    std::string get_password(int ord);
+    void init_file(); // file's init
+    void read_file(); // read the file's information
+    void split_lines(); // split lines to passwords and descriptions
+    void descr_list(); // show the list of descriptions
+    void add_new_record(); // add new record to the lines vector
+    std::string get_description(int ord); // return a description
+    std::string get_password(int ord); // return a password
+    std::string get_line(int ord); // return a line (uses for debug)
 };
