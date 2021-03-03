@@ -23,6 +23,7 @@ void pasman::read_file(){
     while(!file.eof()){
         getline(file, per);
         lines.push_back(per);
+        show_pas.push_back(false);
     }
 }
 
@@ -40,8 +41,34 @@ void pasman::split_lines() {
     }
 }
 
+void pasman::print_descr(std::string s){
+    for(const char c:s) addch(c | A_STANDOUT);
+    printw(" - ");
+}
+
 void pasman::descr_list() {
-    for(const std::string s:descriptions){
-        std::cout << s << '\n';
+    keypad(stdscr, true);
+    initscr();
+    curs_set(0);
+    while(1) {
+        clear();
+        for(size_t i = 0; i < descriptions.size(); i++) {
+            if (choice == i) print_descr(get_description(i));
+            else printw("%s - ", get_description(i).c_str());
+            if(show_pas.at(i) == true) printw("%s\n", get_password(i).c_str());
+            else addch('\n');
+        }
+        switch(getch()) {
+            case 107:
+                if(choice) choice--;
+            break;
+            case 106:
+                if(choice < descriptions.size()) choice++;
+            break;
+            case 10:
+                if (!show_pas.at(choice)) show_pas.at(choice) = true;
+                else show_pas.at(choice) = false;
+            break;
+        }
     }
 }
