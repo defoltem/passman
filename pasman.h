@@ -6,6 +6,7 @@
 
 class pasman {
     size_t choice = 0;
+    bool delete_mod = false;
     std::string deflt = "pass";
     std::vector<std::string> lines;
     std::vector<std::string> passwords;
@@ -17,8 +18,9 @@ public:
     void read_file(); // read the file's information
     void split_lines(); // split lines to passwords and descriptions
     void descr_list(); // show the list of descriptions
+    void delete_record(int ord);
     void add_new_record(); // add new record to the lines vector
-    void print_descr(std::string s);
+    void print_descr(std::string s); // write the highlated line 
     std::string get_description(int ord); // return a description
     std::string get_password(int ord); // return a password
     std::string get_line(int ord); // return a line (uses for debug)
