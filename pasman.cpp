@@ -23,7 +23,7 @@ void pasman::read_file(){
     while(!file.eof()){
         getline(file, per);
         lines.push_back(per);
-        show_pas.push_back(false);
+        //show_pas.push_back(false);
     }
 }
 
@@ -38,6 +38,7 @@ void pasman::split_lines() {
         descriptions.push_back(s.substr(pos1, pos2));
         pos1 = s.size();
         passwords.push_back(s.substr(pos2+1, pos1));
+        show_pas.push_back(false);
     }
 }
 
@@ -56,13 +57,43 @@ void pasman::delete_record(int ord) {
     }   
 }
 
+void pasman::write_file(){
+    file.close();
+    std::ofstream fout;
+    fout.open("pass");
+    size_t lenght = lines.size();
+    for (size_t i = 0; i < lenght; i++){
+        fout << lines.at(i) << '\n';
+    }
+}
+
+void pasman::add_new_record(){
+    endwin();
+    system("clear");
+    std::string pas, descr, cmplt;
+    std::cout << "Write a description for your password ? ";
+    getline(std::cin, descr);
+    std::cout << "Write the password ? ";
+    getline(std::cin, pas);
+    cmplt = descr + ';' + pas;
+    std::cout << cmplt << '\n';
+    lines.push_back(cmplt);
+    int pos1 = 0;
+    int pos2 = cmplt.find(";");
+    descriptions.push_back(cmplt.substr(pos1, pos2));
+    pos1 = cmplt.size();
+    passwords.push_back(cmplt.substr(pos2+1, pos1));
+    show_pas.push_back(false);
+    system("clear");
+}
+
 void pasman::descr_list() {
     keypad(stdscr, true);
     initscr();
     curs_set(0);
     while(1) {
         clear();
-        printw("press 'd' to activate the delete mode\nuse 'j' (down) and 'k' (up) keys to move\npress 'enter' to choose\n");
+        printw("Use 'j' (down) and 'k' (up) keys to move\nPress 'd' to activate the delete mode\nPress 'enter' to choose\nPress 'a' to add a new record\nPress 's' to save changes\n");
         if (delete_mod) printw("delete mod is active!\n");
         for(size_t i = 0; i < descriptions.size(); i++) {
             if (choice == i) { 
@@ -91,6 +122,12 @@ void pasman::descr_list() {
             case 'd':
                 if (delete_mod == true) delete_mod = false;
                 else delete_mod = true;
+            break;
+            case 'a':
+                add_new_record();
+            break;
+            case 's':
+                write_file();
             break;
         }
     }

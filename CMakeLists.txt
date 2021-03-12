@@ -1,0 +1,6 @@
+cmake_minimum_required(VERSION 3.18.3)
+project(passwman)
+find_package(Curses REQUIRED)
+include_directories(${CURSES_INCLUDE_DIR})
+add_executable(passwman main.cpp pasman.cpp)
+target_link_libraries(passwman ${CURSES_LIBRARIES})
