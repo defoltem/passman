@@ -93,7 +93,7 @@ void pasman::descr_list() {
     curs_set(0);
     while(1) {
         clear();
-        printw("Use 'j' (down) and 'k' (up) keys to move\nPress 'd' to activate the delete mode\nPress 'enter' to choose\nPress 'a' to add a new record\nPress 's' to save changes\n");
+        printw("Use 'j' (down) and 'k' (up) keys to move\nPress 'd' to activate the delete mode\nPress 'enter' to choose\nPress 'a' to add a new record\nPress 's' to save changes\nPress 'e' to exit the programm\n");
         if (delete_mod) printw("delete mod is active!\n");
         for(size_t i = 0; i < descriptions.size(); i++) {
             if (choice == i) { 
@@ -128,6 +128,11 @@ void pasman::descr_list() {
             break;
             case 's':
                 write_file();
+            break;
+            case 'e':
+                endwin();
+                system("clear");
+                exit(0);
             break;
         }
     }
