@@ -1,5 +1,5 @@
 # passman
-Password manager. It hasn't any crypto protection!!! (for now)
+Password manager. It protected be AES.
 # Reqirement
 - gcc
 - ncurses
