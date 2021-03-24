@@ -1,5 +1,5 @@
 # passman
-Password manager. It protected be AES.
+Password manager. It protected by AES.
 # Reqirement
 - gcc
 - ncurses
