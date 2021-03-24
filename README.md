@@ -1,12 +1,11 @@
 # passman
 Password manager. It hasn't any crypto protection!!! (for now)
 # Reqirement
-- g++
+- gcc
 - ncurses
-# Build
+- cryptoPP
+# Install & Build
 ```
-$ mkdir build && mv pass build/
-$ cd build
-$ cmake ../
-$ cmake --build .
+$ git clone https://github.com/defoltem/passman
+$ g++ -o man main.cpp pasman.cpp -lcurses -lcryptopp
 ```
