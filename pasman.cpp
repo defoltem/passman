@@ -7,7 +7,19 @@ void pasman::init_file(){
     if (file_name == "") file.open(deflt);
     else file.open(file_name);
     if(file) std::cout << "file's open properly\n";
-    else std::cout << "there isn't any file like that\n";
+    else { 
+        std::cout << "there isn't any file like that\n";
+        exit(0);
+    }
+    std::cout << "write a key (it have to be 16 symbols or remaining field will fill by zeros) ? ";
+    getline(std::cin, key_string);
+    if (key_string.size() < 16) {
+        for (size_t i = key_string.size(); i < 16; i++){
+            key_string += "0";
+        }
+    }
+    iv = SecByteBlock((const byte*)key_string.data(), key_string.size());
+    key = SecByteBlock((const byte*)key_string.data(), key_string.size()); // convert to SecByteBlock
 }
 
 std::string pasman::get_password(int ord){
@@ -19,11 +31,20 @@ std::string pasman::get_description(int ord){
 }
 
 void pasman::read_file(){
-    std::string per = "";
-    while(!file.eof()){
-        getline(file, per);
-        lines.push_back(per);
-        //show_pas.push_back(false);
+    try {
+        CBC_Mode< AES >::Decryption d;
+        d.SetKeyWithIV(key, key.size(), iv);
+        std::string per = "";
+        std::string recovered = "";
+        while(!file.eof()){
+            getline(file, per);
+            if(per == "") break;
+            StringSource ss(per, true, new HexDecoder(new StreamTransformationFilter(d, new StringSink(recovered))));
+            lines.push_back(recovered);
+        }
+    } catch(const CryptoPP::Exception &e) {
+        std::cout << "wrong password\n";
+        exit(0);
     }
 }
 
@@ -58,13 +79,21 @@ void pasman::delete_record(int ord) {
 }
 
 void pasman::write_file(){
+    //SecByteBlock iv = SecByteBlock((const byte*)key_string.data(), key_string.size());
+    //SecByteBlock key((const byte*)key_string.data(), key_string.size());// convert to SecByteBlock
+    std::string cipher, encoded;
     file.close();
+    CBC_Mode< AES >::Encryption e;
+    e.SetKeyWithIV( key, key.size(), iv );
     std::ofstream fout;
     fout.open("pass");
     size_t lenght = lines.size();
     for (size_t i = 0; i < lenght; i++){
-        fout << lines.at(i) << '\n';
+        StringSource ss1(lines.at(i), true, new CryptoPP::StreamTransformationFilter(e, new CryptoPP::StringSink(cipher)));
+        StringSource ss2(cipher, true, new CryptoPP::HexEncoder( new CryptoPP::StringSink(encoded)));
+        fout << encoded << '\n';
     }
+    printw("the file was rewritten\n");
 }
 
 void pasman::add_new_record(){

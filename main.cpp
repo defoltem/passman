@@ -2,6 +2,7 @@
 
 int main(){
     pasman p;
+
     p.init_file();
     p.read_file();
     p.split_lines();

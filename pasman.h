@@ -2,9 +2,18 @@
 #include <fstream>
 #include <string>
 #include <vector>
+#include <cryptopp/hex.h>
+#include <cryptopp/osrng.h>
+#include <cryptopp/modes.h>
+#include <cryptopp/aes.h>
 #include <ncurses.h>
 
+using namespace CryptoPP;
+
 class pasman {
+    std::string key_string = "";
+    SecByteBlock key;
+    SecByteBlock iv;
     size_t choice = 0;
     bool delete_mod = false;
     std::string deflt = "pass";
